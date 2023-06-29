@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+                xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+                layout:decorate="navBarUser.html">
+<head>
+    
+    <title>Detail</title>
+
+    <script>
+        // Fonction qui appelle l'endpoint Ajax et met à jour l'élément DOM avec la réponse
+        function updateTotalItems() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/cart/nbpanier');
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    document.getElementById("nbPannier").textContent = xhr.responseText;
+                    // alert(xhr.responseText);
+                }
+                else {
+                    console.log('Request failed.  Returned status of ' + xhr.status);
+                }
+            };
+            xhr.send();
+        }
+
+        // Appel initial de la fonction
+        updateTotalItems();
+
+        // Appel périodique de la fonction toutes les 5 secondes (5000 ms)
+        setInterval(updateTotalItems, 5000);
+
+    </script>
+    <script>
+        function addtocart(id) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/addToCart/'+id);
+            var params = "id="+id;
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    // alert(xhr.responseText); // affiche le nombre d'articles dans le panier
+                    // Met à jour l'élément DOM affichant le nombre de produits dans le panier
+                    document.getElementById("nbPannier").textContent = xhr.responseText;
+                } else if (xhr.status === 401) { // code 401 : non autorisé
+                    alert(xhr.responseText); // affiche un message demandant à l'utilisateur de se connecter
+                } else {
+                    console.log('Request failed. Returned status of ' + xhr.status);
+                }
+            };
+            xhr.send();
+        }
+
+    </script>
+
+</head>
+<body class="bg-gray-200">
+    <div layout:fragment="content">
+
+
+        <form th:action="@{/cart}" method="get">
+            <div class="alert alert-success" style="margin-top:5%" th:if="${success}">
+                <h4 th:text="${success}"></h4>
+            </div>
+            <section class="col-md-12 row container" style="margin-top: 3%;" th:each=" produit: ${detailproduit}">
+
+                <div class="col-md-6" style="margin-top: 5%;">
+                    <img class=" " th:src = "'data:image/png;base64,' + ${produit.photo}" alt="fff" style="height: 35rem; width: 30rem; margin-left: 20%; ">
+                </div>
+                    <div class="col-md-6" style="height:100%">
+                        <div class="text-center" style="font-weight: bold; font-size: x-large; font-style: italic; ">Caracteristique</div>
+                        <h1 th:text="${produit.description}"></h1>
+                        <div class=" ">
+                            <input type="hidden" th:value="${produit.id}" name="id">
+                            <button type="submit" th:onclick="('addtocart(\'' + ${produit.id} + '\')')" style="background: #51aef0; color : white; font-weight: bold; width: 60%;" class="btn btn-lg ml-5">J'ACHETE</button>
+
+                        </div>
+                         ils ne seront je suis moi Libero tenetur architecto aliquam temporibus rerum nam. Ex, dolor esse? Fugiat nostrum velit rerum, excepturi culpa, sapiente impedit aliquam quam laboriosam error vero unde aut obcaecati iste ex ullam? Dignissimos.
+                        Nulla fugit itaque repudiandae! Voluptate qui voluptatum id assumenda doloribus accusantium vel, voluptas similique repellat libero laudantium repellendus nisi vero? Quod ipsam quibusdam dolorum, fugiat quo nesciunt ea non ipsum!
+                        A velit eaque optio vitae labore nihil quia obcaecati, unde commodi illo repellendus corrupti nemo. Reiciendis porro deserunt eius excepturi voluptatem! Consequuntur numquam delectus sunt incidunt nam iure nostrum cupiditate?
+                        Assumenda, itaque laudantium voluptas quas obcaecati, consectetur tenetur dicta reiciendis explicabo totam neque accusantium, ducimus exercitationem aperiam nobis deserunt. Nobis error cupiditate commodi aperiam explicabo itaque amet tenetur.
+                        niti cupiditate fuga est, consectetur autem optio. Neque aspernatur est, odit adipisci, facilis ipsa tempora ipsam explicabo veritatis, sit tempore aperiam cum.
+                    </div>
+
+            </section>
+        </form>
+
+    </div>
+    <!-- endnavbar -->
+    <br><br>
+
+    
+    <!-- <script th:src="@{/javascipt/java.js}" type="text/javascript"></script> -->
+</body>
+</html>

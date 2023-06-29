@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+                xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+                layout:decorate="navUser.html">
+
+<head>
+
+    <title>Vente</title>
+</head>
+
+<body class="" style="background-color: rgb(232, 231, 231);">
+
+    
+    <div layout:fragment="content">
+
+        <!-- cardBody -->
+        <div class="container-fluid" id="largerBody">
+
+            <section class="body-header">
+                <h1>Liste des Commandes</h1>
+            </section>
+
+            <!-- <section class="row container"> -->
+            <!-- <div> -->
+            <div class="container bg-white pt-4 shadow-lg p-3 mb-5 rounded" id="hideBody" style="border-radius: 5px;">
+                <div>
+                   
+                    <div th:if="${success}" >
+                        <p th:text="${success}" class="text-center alert alert-success"></p>
+                    </div>
+                    <div th:if="${failed}">
+                        <h3 th:text="${failed}" class="text-center alert alert-warning"></h3>
+                    </div>
+                    <div th:if="${vide}">
+                        <h4 class="text-center alert alert-warning" th:text="${vide}"></h4>
+                    </div>
+                </div>
+                <table id="example" class="table table-striped table-bordered table-sm" style="width:100%; height: 10rem; font-size: smaller;box-shadow: #0a0a0a">
+                    <thead>
+                        <tr>
+                            <th>id</th>
+                            <th >Date de Commande</th>
+                            <th>Prix Total</th>
+                            <th>Status de la Commande</th>
+                            <th>Client</th>
+                            <th>Details</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr th:each=" p: ${orders}">
+                            <td th:text="${p.id}"></td>
+                            <td th:text="${p.orderDate}"> </td>
+                            <td th:text="${p.prixTotal}"> </td>
+                            <td th:text="${p.statusOrdre}"></td>
+                            <td th:text="${p.customer.firstName}"></td>
+                            <td>
+<!--                                <a id="editButton" class="btn btn-primary" th:href="@{/admin/findById(id=${category.id})}" >Modifier</a>-->
+                                <button type="button" class="btn btn-primary" data-toggle="modal" th:data-target="'#exempleModal'+${p.id}" data-whatever="@mdo" data-id="${p.id}">detail</button>
+                                <div th:value="${p.id}" class="modal fade" th:id="'exempleModal'+${p.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+                                <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Description</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="form-group">
+                                                    <label for="idEdit" class="col-form-label">id:</label>
+                                                    <input type="text" class="form-control" id="idEdit" th:text="${p.id}" readonly>
+                                                </div>
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>nom</th>
+                                                            <th>Photo</th>
+                                                            <th>Quantite</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr th:each="c:${orderDetails}">
+                                                            <td th:text="${c.produit.nom}"></td>
+                                                            <td ><img src="" style="width: 30%; height: 70%;" th:src = "'data:image/jpg;base64,' + ${c.produit.photo}" alt="lol"></td>
+                                                            <td th:text="${c.quantite}"></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+<!--                                <a id="listOrderButton" class="btn btn-primary" th:href="@{/admin/orderById(id=${p.id})}">detail</a>-->
+<!--                                <div class="modal fade" id="listOrderModal" tabindex="-1" role="dialog" aria-labelledby="editModalExample" aria-hidden="true">-->
+<!--                                    <div class="modal-dialog" role="document">-->
+<!--                                        <div class="modal-content">-->
+<!--                                            <div class="modal-header">-->
+<!--                                                <h5 class="modal-title" id="exampleModalLabel">Description</h5>-->
+<!--                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+<!--                                                    <span aria-hidden="true">&times;</span>-->
+<!--                                                </button>-->
+<!--                                            </div>-->
+<!--                                            <div class="modal-body">-->
+<!--                                                <div class="form-group">-->
+<!--                                                    <label for="idEdit" class="col-form-label">id:</label>-->
+<!--                                                    <input type="text" class="form-control" id="idEdit" name="id" readonly>-->
+<!--                                                </div>-->
+<!--                                                <table>-->
+<!--                                                    <thead>-->
+<!--                                                    <tr>-->
+<!--                                                        <th>nom</th>-->
+<!--                                                        <th>Photo</th>-->
+<!--                                                        <th>Quantite</th>-->
+<!--                                                    </tr>-->
+<!--                                                    </thead>-->
+<!--                                                    <tbody id="orderDetailsBody">-->
+<!--                                                    </tbody>-->
+<!--                                                </table>-->
+<!--                                            </div>-->
+<!--                                            <div class="modal-footer">-->
+<!--                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+
+                            </td>
+                            <td ><a  th:href="@{/admin/order/{id} (id = ${p.id})}" class="btn btn-primary">Modifier</a>
+                                <!--<a th:if="${p.is_delete == true}" th:href="@{/admin/enabledProduit/{id} (id = ${p.id})}" class="btn btn-warning">Activer</a>
+                                <a th:if="${p.is_delete == false}" th:href="@{/admin/deleteProduit/{id} (id = ${p.id})}" class="btn btn-danger">Suprimer</a>-->
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+<!--<script th:src="@{/javascipt/OrderDetail.js}"></script>-->
+
+</html>
